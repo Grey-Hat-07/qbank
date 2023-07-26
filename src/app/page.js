@@ -1,5 +1,5 @@
 'use client'
-
+import Head from 'next/head'
 import React from 'react'
 import {  Menu, Moon, X,  Database, Users, FileOutput, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
@@ -23,17 +23,19 @@ const menuItems = [
 ]
 
 export default function LandinngPageTwo() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false)
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
+  // const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+  const [hover, setHover] = React.useState(false)
+  const clickhover = () => {
+    setHover(!hover)
   }
 
   return (
     <div className="w-full">
-      
+      <Head>
+        <title>CrowdQuesTech</title>
+         </Head>
       {/* Hero Section */}
-      <div className="relative w-full bg-white">
+      <div className="relative w-full bg-[url('/bg-image2.jpg')] bg-cover bg-center">
         <div className="mx-auto max-w-7xl lg:px-8">
           <div className="flex flex-col justify-center px-4 py-10 lg:px-6">
             
@@ -66,6 +68,40 @@ export default function LandinngPageTwo() {
           </div> */}
         </div>
       </div>
+      <div className='container ms-5'>
+      <h1 className='text-3xl font-semibold text-black mt-10 mb-10'>
+          Create Question paper
+      </h1>
+      <p className='text-lg text-gray-700 mb-10'>
+      Empower your education system with 
+      a crowd-sourced question bank and elevate your assessment strategies to new heights.
+      </p>
+      <div className='flex flex-col items-center'>
+      <button className='bg-black text-white px-4 py-2 rounded-md relative flex' onClick={clickhover}>
+          {/* <Link href="/generateq" className='flex items-center '> */}
+              Generate Question Paper 
+              <ArrowRight className=' ms-2'/>
+          
+  
+      </button>
+      </div>
+      </div>
+      {hover && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded">
+          <button
+              className=" px-4 py-2  text-black rounded float-right mt-0"
+              onClick={clickhover}
+            >
+              X
+            </button>
+            <div className='mt-4 px-6 py-4'>
+            <p>This is the hover window content.</p>
+            <Link href="/generateq" className=' underline'>click to proceed</Link>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Features Section */}
       <div className="mx-auto my-12 max-w-7xl px-4 sm:px-6 md:my-24 lg:my-32 lg:px-8">
         
