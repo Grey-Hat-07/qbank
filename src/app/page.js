@@ -28,6 +28,7 @@ export default function LandinngPageTwo() {
   const clickhover = () => {
     setHover(!hover)
   }
+  const [subject, setSubject] = React.useState('')
 
   return (
     <div className="w-full">
@@ -96,7 +97,13 @@ export default function LandinngPageTwo() {
               X
             </button>
             <div className='mt-4 px-6 py-4'>
-            <p>This is the hover window content.</p>
+            <select className='border-2 border-black rounded-md px-2 py-1' onChange={(e)=>setSubject(e.target.value)}>
+              <option value=''>Select Subject</option>
+              <option value='Maths'>Maths</option>
+              <option value='Physics'>Computer Science</option>
+              <option value='Chemistry'>Chemistry</option>
+            </select>
+            <br/>
             <Link href="/generateq" className=' underline'>click to proceed</Link>
             </div>
           </div>

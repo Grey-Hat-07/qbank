@@ -2,8 +2,9 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import React,{useState, useEffect} from 'react'
-import {Menu,X } from 'lucide-react'
+import {Menu,X, User } from 'lucide-react'
 import Link from 'next/link'
+import {setCookie, parseCookies, destroyCookie} from 'nookies'
 // import {Navbar} from '@/components/Navbar'
 // import { useRouter } from 'next/router'
 // import Router from 'next/router'
@@ -11,29 +12,31 @@ import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
-const menuItems = [
-  {
-    name: 'Home',
-    href: '#',
-  },
-  {
-    name: 'About',
-    href: '#',
-  },
-  {
-    name: 'Contact',
-    href: '#',
-  },
-  {
-    name: 'Blogs',
-    href: '#',
-  },
-]
+
 
 
 export default function RootLayout({ children }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   // const router = useRouter()
+  const [loggined, setLoggined] = useState(false)
+  useEffect(() => {
+    const {email} = parseCookies()
+    if (email) {
+      setLoggined(true)
+    }
+  },[setLoggined])
+
+  const logout = () => {
+    destroyCookie(null, 'email')
+    setLoggined(false)
+    
+  }
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   const [loginpage, setLoginpage] = useState(false)
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -42,7 +45,7 @@ export default function RootLayout({ children }) {
     if (window.location.pathname === '/Signup'|| window.location.pathname === '/Signin') {
       setLoginpage(true)
     }
-  }, [])
+  }, [setLoginpage])
   return (
     <html lang="en">
       
@@ -87,12 +90,42 @@ export default function RootLayout({ children }) {
             </ul>
           </div>
           <div className="hidden lg:block">
-            <Link
-              href="/Signin"
-              className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-            >
-              Sign in
-            </Link>
+          {loggined? (
+                     <div className="relative flex">
+                     <button
+                       className="mt-4 w-full rounded-md flex bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                       onClick={toggleDropdown}
+                     >
+                       <User className="h-4 w-4" aria-hidden="true" />  Account
+                     </button>
+                     {isDropdownOpen && (
+                       <div className="absolute top-12 right-0 z-10 bg-white p-2 shadow rounded">
+                         <ul>
+                           <li>
+                              <Link href="/profile">
+                                <span className="text-sm font-semibold text-gray-800 m-2 hover:text-gray-900">
+                                  Profile
+                                </span>
+                              </Link>
+                           </li>
+                           <li>
+                            <button onClick={logout}
+                            className='text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md m-2'>
+                              Logout
+                            </button>
+                           </li>
+                           
+                         </ul>
+                       </div>
+                     )}
+                   </div>
+                  ): (
+                  <Link
+                    href="/Signin"
+                    className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                  >
+                    Sign in
+                  </Link>)}
           </div>
           <div className="lg:hidden">
             <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer" />
@@ -132,25 +165,45 @@ export default function RootLayout({ children }) {
                   </div>
                   <div className="mt-6">
                     <nav className="grid gap-y-4">
-                      {/* {menuItems.map((item) => (
-                        <a
-                          key={item.name}
-                          href={item.href}
-                          className="-m-3 flex items-center rounded-md p-3 text-sm font-semibold hover:bg-gray-50"
-                        >
-                          <span className="ml-3 text-base font-medium text-gray-900">
-                            {item.name}
-                          </span>
-                        </a>
-                      ))} */}
+                    
                     </nav>
                   </div>
+                  {loggined? (
+                     <div className="relative flex">
+                     <button
+                       className="mt-4 w-full rounded-md flex bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                       onClick={toggleDropdown}
+                     >
+                       <User className="h-4 w-4" aria-hidden="true" />  Account
+                     </button>
+                     {isDropdownOpen && (
+                       <div className="absolute top-12 right-0 z-10 bg-white p-2 shadow rounded">
+                         <ul>
+                           <li>
+                              <Link href="/profile">
+                                <span className="text-sm font-semibold text-gray-800 m-2 hover:text-gray-900">
+                                  Profile
+                                </span>
+                              </Link>
+                           </li>
+                           <li>
+                            <button onClick={logout} 
+                            className='text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md m-2'>
+                              Logout
+                            </button>
+                           </li>
+                           
+                         </ul>
+                       </div>
+                     )}
+                   </div>
+                  ): (
                   <Link
                     href="/Signin"
                     className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                   >
                     Sign in
-                  </Link>
+                  </Link>)}
                 </div>
               </div>
             </div>
@@ -181,9 +234,9 @@ export default function RootLayout({ children }) {
                     <span className="ml-4 text-lg font-bold">CrowdQuesTech</span>
                   </div>
                   <div>
-                    <p className="mb-4  text-base font-medium">The Tailwind CSS Component library</p>
+                    {/* <p className="mb-4  text-base font-medium">The Tailwin CSS Component library</p> */}
                     <p className="text-sm text-gray-600">
-                      &copy; Copyright 2022. All Rights Reserved by DevUI.
+                      &copy; Copyright 2023. All Rights Reserved by CrowdQuesTech.
                     </p>
                   </div>
                 </div>

@@ -1,17 +1,29 @@
 "use client"
-import React from 'react'
-import { useState } from 'react'
+import React, { use } from 'react'
+import { useState,useEffect } from 'react'
 import Link from 'next/link'
+import axios from 'axios'
+import {setcookie, parseCookies} from 'nookies'
 export default function page() {
-    const [firstname, setfirstName] = useState('')
-    const[lastname,setlastName]=useState('')
+    const [firstName, setfirstName] = useState('')
+    const[lastName,setlastName]=useState('')
     const [email, setEmail] = useState('')
+    const [username, setusername] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirm] = useState('')
+
+    useEffect(() => {
+        const cookie = parseCookies()
+        if (cookie.email) {
+          window.location.href = '/'
+        }
+      },[])
     const submitHandler = async(e) => {
         e.preventDefault()
         // dispatch(register(name, email, password))
-        console.log(firstname, lastname, email, password, confirmPassword)
+        // const cookie = parseCookies()
+        
+        console.log(firstName, lastName, email, password, confirmPassword, username)
         if(password!==confirmPassword){
             alert("Password and Confirm Password are not same")
             setPassword('')
@@ -24,18 +36,26 @@ export default function page() {
             setConfirm('')
             return
         }
-        if(firstname===''||lastname===''||email===''||password===''||confirmPassword===''){
+        if(firstName===''||lastName===''||email===''||password===''||confirmPassword===''){
             alert("Please fill all the fields")
             return
         }
-        const res = await fetch(``, {
+        const res = await fetch(`http://localhost:8080/qms/save`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ firstname, lastname, email, password })
+            body: JSON.stringify({ firstName, lastName, email, password,username })
           })
             const data = await res.json()
+            
+            if(data.status===true){
+                alert("Account Created Successfully")
+                window.location.href='/Signin'
+            }
+            else{
+                alert("Account Creation Failed")
+            }
         // setEmail('')
         // setPassword('')
         // setfirstName('')
@@ -80,8 +100,8 @@ export default function page() {
                                         className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                                         type="text"
                                         placeholder="First Name"
-                                        id="firstname"
-                                        value={firstname}
+                                        id="firstName"
+                                        value={firstName}
                                         onChange={(e) => setfirstName(e.target.value)}
                                     ></input>
                                 </div>
@@ -96,9 +116,25 @@ export default function page() {
                                         className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                                         type="text"
                                         placeholder="Last Name"
-                                        id="lastname"
-                                        value={lastname}
+                                        id="lastName"
+                                        value={lastName}
                                         onChange={(e) => setlastName(e.target.value)}
+                                    ></input>
+                                </div>
+                            </div>
+                            <div>
+                                <label htmlFor="name" className="text-base font-medium text-gray-900">
+                                    {' '}
+                                    username{' '}
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                                        type="text"
+                                        placeholder="Last Name"
+                                        id="lastName"
+                                        value={username}
+                                        onChange={(e) => setusername(e.target.value)}
                                     ></input>
                                 </div>
                             </div>
