@@ -28,7 +28,10 @@ export default function RootLayout({ children }) {
 
   const logout = () => {
     destroyCookie(null, 'email')
+    destroyCookie(null, 'username')
+    destroyCookie(null, 'expert')
     setLoggined(false)
+    window.location.reload()
     
   }
 

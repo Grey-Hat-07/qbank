@@ -79,15 +79,15 @@ export default function LandinngPageTwo() {
       </p>
       <div className='flex flex-col items-center'>
       <button className='bg-black text-white px-4 py-2 rounded-md relative flex' onClick={clickhover}>
-          {/* <Link href="/generateq" className='flex items-center '> */}
+          <Link href="/generateq" className='flex items-center '>
               Generate Question Paper 
               <ArrowRight className=' ms-2'/>
-          
+          </Link>
   
       </button>
       </div>
       </div>
-      {hover && (
+      {/* {hover && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded">
           <button
@@ -108,7 +108,7 @@ export default function LandinngPageTwo() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
       {/* Features Section */}
       <div className="mx-auto my-12 max-w-7xl px-4 sm:px-6 md:my-24 lg:my-32 lg:px-8">
         

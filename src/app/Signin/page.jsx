@@ -18,7 +18,7 @@ export default function page() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-
+  const cookie = parseCookies()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -34,16 +34,30 @@ export default function page() {
       body: JSON.stringify({ email, password }),
     })
     const json = await res.json()
-    // const res = await axios.get('http://localhost:8080/qms/login', {
-    //     body: JSON.stringify({ email, password })
-    // })
-    // const json = await res.json()
+
     if (json.status === false) {
       alert('Invalid Credentials')
       return
     }
+    // const email = cookie.email
+    const res2 = await fetch(`http://localhost:8080/qms/details/${email}`, {
+            method: 'GET',
+            // headers: {
+            //     'Content-Type': 'application/json',
+            // },
+        })
+    const json2 = await res2.json()
+
     console.log(json)
     setCookie(null, 'email', `${email}`, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: '/',
+    })
+    setCookie(null, 'username', `${json2.username}`, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: '/',
+    })
+    setCookie(null, 'expert', `${json2.expert}`, {
       maxAge: 30 * 24 * 60 * 60,
       path: '/',
     })
