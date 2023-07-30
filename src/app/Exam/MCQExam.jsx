@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-
+import {parseCookies,setCookie} from 'nookies';
 export default function MCQExam() {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -8,6 +8,10 @@ export default function MCQExam() {
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
 
+const [final,setFinal] = useState();
+
+  const {email,expert} = parseCookies();
+  const [subject, setSubject] = useState('Computer Science');
   const fetchData = async () => {
     try {
       const res = await fetch('http://localhost:8080/qms/expert/qsn/generate/Computer Science', {
@@ -64,6 +68,7 @@ export default function MCQExam() {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
     } else {
       setShowResult(true); // Show result when the last question is answered
+      result();
     }
     calculateScore();
   };
@@ -76,7 +81,26 @@ export default function MCQExam() {
       }
     });
     setScore(totalScore);
+    
   };
+  const result = async()=>{
+    const res = await fetch('http://localhost:8080/qms/expert/qsn/result', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({email,subject,marks:score}),
+    });
+    const data = await res.json();
+    console.log(data);
+    setFinal(data);
+    if(data.status){
+      setCookie(null,'expert','Computer Science',{
+        maxAge: 30 * 24 * 60 * 60,
+        path:'/'
+      })
+    }
+  }
 
   const renderOptions = (options) => {
     if (questions.length === 0) {
@@ -104,10 +128,13 @@ export default function MCQExam() {
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Test Completed!</h3>
           <p>Your total score is: {score}</p>
+
+          {final.status?<p className="text-green-500">You are a subject matter expert</p>:
+          <p className="text-red-500">You are not a subject matter expert</p>}
         </div>
       ) : (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">{questions[currentQuestionIndex]?.question}</h3>
+          <h3 className="text-lg font-semibold">{currentQuestionIndex+1}{'. '}{questions[currentQuestionIndex]?.question}</h3>
           {renderOptions(questions[currentQuestionIndex]?.options)}
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"

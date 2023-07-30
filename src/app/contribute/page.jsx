@@ -2,15 +2,33 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import { parseCookies } from 'nookies'
 export default function page() {
+    const {email,expert} = parseCookies();
+    useEffect(() => {
+        if(!email){
+            window.location.href='/Signin'
+        }
+       
+    }, [])
+   
     const [question, setQuestion] = useState('')
     const handlesubmit = async (e) => {
-        e.preventDefault()
-        const res = await axios.post('https://languagetool.org/api/v2/check', {
-            text: sentence,
-        });
-        console.log(res.data)
+        const res = await fetch('http://localhost:8080/qms/question/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                question: question,
+                email: email,
+                subject: 'Computer Science',
+                topic: 'Algorithms',
+            })
 
+        })
+        const data = await res.json()
+        console.log(data)
 
     }
 
