@@ -9,7 +9,7 @@ const subtopicscomputerscience = {
     2: { title: 'Data Structures' },
     3: { title: 'Algorithms' },
     4: { title: 'Operating Systems' },
-    5: { title: 'Computer Networks' },
+    5: { title: 'Networking' },
     6: { title: 'Database Management Systems' },
     7: { title: 'Computer Architecture' },
     8: { title: 'Theory of Computation' }

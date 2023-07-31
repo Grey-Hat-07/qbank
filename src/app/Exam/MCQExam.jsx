@@ -129,7 +129,7 @@ const [final,setFinal] = useState();
           <h3 className="text-lg font-semibold">Test Completed!</h3>
           <p>Your total score is: {score}</p>
 
-          {final.status?<p className="text-green-500">You are a subject matter expert</p>:
+          {final&&final.status?<p className="text-green-500">You are a subject matter expert</p>:
           <p className="text-red-500">You are not a subject matter expert</p>}
         </div>
       ) : (

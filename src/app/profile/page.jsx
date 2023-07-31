@@ -18,6 +18,7 @@ export default function page() {
     const [firstname, setFirstname] = useState('')
     const [lastname, setLastname] = useState('')
     const [expertise, setExpertise] = useState('')
+    const [contributedQuestions, setContributedQuestions] = useState([])
     const getdetails = async () => {
         const email = cookie.email
         const res = await fetch(`http://localhost:8080/qms/details/${email}`, {
@@ -34,8 +35,10 @@ export default function page() {
             setLastname(json.lastName)
             setExpertise(json.expert)
             setEmail(json.email)
+            setContributedQuestions(json.contributedQuestions)
+            console.log(contributedQuestions)
         }
-
+        console.log(contributedQuestions)
         // setUsername(json.username)
         // setFirstname(json.firstName)
         // setLastname(json.lastName)
@@ -45,11 +48,11 @@ export default function page() {
 
 
     // Replace this data with the list of questions contributed by the user
-    const contributedQuestions = [
-        { id: 1, title: 'How to create a React app?' },
-        { id: 2, title: 'What are the benefits of using Tailwind CSS?' },
-        { id: 3, title: 'How to handle form submission in Node.js?' },
-    ];
+    // const contributedQuestions = [
+    //     { id: 1, title: 'How to create a React app?' },
+    //     { id: 2, title: 'What are the benefits of using Tailwind CSS?' },
+    //     { id: 3, title: 'How to handle form submission in Node.js?' },
+    // ];
 
     return (
         <div className='flex  h-screen'>
@@ -70,10 +73,32 @@ export default function page() {
             <div className="bg-white w-3/4 p-4 container">
                 <h2 className="text-lg font-semibold mb-4">Contributed Questions</h2>
                 <ul className='container'>
-                    {contributedQuestions.map((question) => (
-                        <li key={question.id}>{question.title}</li>
+                    {contributedQuestions&&contributedQuestions.map((question,index) => (
+                        <li key={index} className=" py-2">
+                            <p className='text-md text-black mb-4 '>
+                                {question}
+                            </p>
+                            </li>
                     ))}
                 </ul>
+
+                <h3>Generated question</h3>
+                <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+                    <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
+                        <div className="text-gray-600">
+                            <p className="font-medium text-lg">Question</p>
+                            <p className="text-gray-500">How to create a React app?</p>
+                            </div>  
+                            <div className="text-gray-600">
+                            <p className="font-medium text-lg">Topic</p>
+                            <p className="text-gray-500">React</p>
+                            </div>
+                            <div className="text-gray-600">
+                            <p className="font-medium text-lg">Subject</p>
+                            <p className="text-gray-500">Computer Science</p>
+                            </div>
+                        </div>
+                        </div>
             </div>
         </div>
     );
