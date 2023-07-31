@@ -57,10 +57,17 @@ export default function page() {
       maxAge: 30 * 24 * 60 * 60,
       path: '/',
     })
-    setCookie(null, 'expert', `${json2.expert}`, {
+    if(json2.expert==null){
+    setCookie(null, 'expert', `-1`, {
       maxAge: 30 * 24 * 60 * 60,
       path: '/',
     })
+    }
+    else{
+      setCookie(null, 'expert', `${json2.expert}`, {
+        maxAge: 30 * 24 * 60 * 60,
+        path: '/',
+      })}
     // const emailcookie = parseCookies({email})
     // console.log(emailcookie)
     window.location.href = '/'

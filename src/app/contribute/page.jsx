@@ -2,18 +2,27 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { parseCookies } from 'nookies'
+import { parseCookies,setCookie } from 'nookies'
 export default function page() {
     const {email,expert} = parseCookies();
     useEffect(() => {
         if(!email){
             window.location.href='/Signin'
         }
+        if(expert=='-1'){
+            window.location.href='/Exam'
+        }
        
     }, [])
    
     const [question, setQuestion] = useState('')
+    const [topic, setTopic] = useState('')
     const handlesubmit = async (e) => {
+        e.preventDefault()
+        if (!question || !topic) {
+            alert('Please fill all the fields')
+            return
+        }
         const res = await fetch('http://localhost:8080/qms/question/save', {
             method: 'POST',
             headers: {
@@ -23,12 +32,18 @@ export default function page() {
                 question: question,
                 email: email,
                 subject: 'Computer Science',
-                topic: 'Algorithms',
+                topic: topic,
             })
 
         })
         const data = await res.json()
         console.log(data)
+        if(data.status==true){
+            setCookie(null, 'expert', 'Computer Science', {
+                maxAge: 30 * 24 * 60 * 60,
+                path: '/',
+            })
+        }
 
     }
 
@@ -56,8 +71,17 @@ export default function page() {
                                         </div>
 
                                         <div className="md:col-span-5">
-                                            <label htmlFor="email">Email Address</label>
-                                            <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" />
+                                            <label htmlFor="email">Topic</label>
+                                            <select className='h-10 border mt-1 rounded px-4 w-full bg-gray-50' value={topic} onChange={(e) => setTopic(e.target.value)}>
+                                                <option value="">Select</option>
+                                                <option value="Algorithms">Algorithms</option>
+                                                <option value="Data Structures">Data Structures</option>
+                                                <option value="Operating Systems">Operating Systems</option>
+                                                <option value="Networking">Networking</option>
+                                                <option value="Database Management Systems">Database Management Systems</option>
+                                                <option value="Computer Architecture">Computer Architecture</option>
+                                                <option value="Theory of Computation">Theory of Computation</option>
+                                            </select>
                                         </div>
 
 

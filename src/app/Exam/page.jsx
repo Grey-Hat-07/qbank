@@ -9,7 +9,7 @@ export default function page() {
     if(!email){
       window.location.href='/Signin'
     }
-    if(expert!=null){
+    if(expert!='-1'){
       window.location.href='/'
     }
   }, [])
