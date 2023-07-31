@@ -59,18 +59,29 @@ export default function page() {
         const data = await res.json()
         console.log(data)
         setShowResult(true)
+        setStatus(data)
         
 
     }
     const [showResult, setShowResult] = useState(false);
-
+    const [status, setStatus] = useState();
     return (
         <div>
             <div className="min-h-screen p-6 bg-gray-100 flex  justify-center">
                 <div className="container max-w-screen-lg m-5  mx-auto">
                     {showResult ? <div>
                         <div className="container mx-auto mt-4 p-4">
-                            <h1 className="text-2xl font-semibold mb-4 text-center">Thank you for your contribution</h1>
+                            {status.status?<><h1 className="text-2xl font-semibold mb-4 text-center">Thank you for your contribution</h1>
+                            <button  onClick={()=>setShowResult(false)} className="bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-4"
+                            >Contribute More</button> 
+                            <button className='bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-4 ml-4' onClick={()=>window.location.href='/'}
+                             >Go to Home</button>
+                            </>
+                            :<><h1 className="text-2xl text-red-300 font-semibold mb-4 text-center">{status.message}</h1>
+                            <button  onClick={()=>setShowResult(false)} className="bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-4"
+                            >Try Again</button>
+                            </>}
+                            {/* <h1 className="text-2xl font-semibold mb-4 text-center">Thank you for your contribution</h1> */}
                             </div>
                     </div>
                     :<div>
