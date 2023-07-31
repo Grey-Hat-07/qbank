@@ -23,6 +23,26 @@ export default function page() {
             alert('Please fill all the fields')
             return
         }
+        const apiUrl = 'https://api.languagetool.org/v2/check';
+        const language = 'en-US';
+        
+        try {
+          const response = await fetch(`${apiUrl}?language=${language}&text=${encodeURIComponent(question)}`);
+          const data = await response.json();
+    
+          // Process the API response to extract the corrected text
+          const correctedText = data.matches.map((match) => match.replacements[0].value).join(' ');
+        //   setCorrectedText(correctedText);
+          console.log(correctedText)
+          if(correctedText!=''){
+            alert('Please enter a valid question')
+            return
+          }
+        } catch (error) {
+          console.error('Error while calling the API:', error);
+        }
+    
+        
         const res = await fetch('http://localhost:8080/qms/question/save', {
             method: 'POST',
             headers: {
@@ -38,20 +58,22 @@ export default function page() {
         })
         const data = await res.json()
         console.log(data)
-        if(data.status==true){
-            setCookie(null, 'expert', 'Computer Science', {
-                maxAge: 30 * 24 * 60 * 60,
-                path: '/',
-            })
-        }
+        setShowResult(true)
+        
 
     }
+    const [showResult, setShowResult] = useState(false);
 
     return (
         <div>
             <div className="min-h-screen p-6 bg-gray-100 flex  justify-center">
                 <div className="container max-w-screen-lg m-5  mx-auto">
-                    <div>
+                    {showResult ? <div>
+                        <div className="container mx-auto mt-4 p-4">
+                            <h1 className="text-2xl font-semibold mb-4 text-center">Thank you for your contribution</h1>
+                            </div>
+                    </div>
+                    :<div>
                         {/* <h2 className="font-semibold text-xl text-gray-600">Question details</h2> */}
                         {/* <p className="text-gray-500 mb-6">Form is mobile responsive. Give it a try.</p> */}
 
@@ -59,7 +81,7 @@ export default function page() {
                             <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
                                 <div className="text-gray-600">
                                     <p className="font-medium text-lg">Question Details</p>
-            {/* <p>Please fill out all the fields.</p> */} 
+                        {/* <p>Please fill out all the fields.</p> */} 
                                 </div>
 
                                 <div className="lg:col-span-2">
@@ -97,7 +119,7 @@ export default function page() {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>}
                 </div>
             </div>
         </div>
