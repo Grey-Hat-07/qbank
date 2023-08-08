@@ -49,16 +49,52 @@ const styles = StyleSheet.create({
     fontSize: '13pt',
     marginBottom: '10pt',
     marginTop: '10pt',
+  },
+  time:{
+    fontSize: '13pt',
+    marginBottom: '10pt',
+    marginTop: '10pt',
+    textAlign: 'right',
   }
 })
 
 export default function Pdfgen({ data, marks, subject, title }) {
   console.log({ data, marks, subject, title })
+  const [time, setTime] = useState(0)
+  
+  const timeinminhrs = (time) => {
+    var hrs = Math.floor(time / 60)
+    var min = time % 60
+    if(hrs==0)
+    {
+      return min + ' min'
+    }
+    else
+    {
+      return hrs + ' hrs ' + min + ' min'
+    }
+  }
   const [jsonData, setJsonData] = useState()
   const [Subject, setSubject] = useState()
   useEffect(() => {
     setSubject(subject)
     setJsonData(data)
+    if(marks==30)
+    {
+      setTime(50)
+    }
+    else if(marks==50)
+    {
+      setTime(90)
+    }
+    else if(marks==70)
+    {
+      setTime(120)
+    }
+    else if(marks==100)
+    {
+      setTime(150)
+    }
   }, [data])
   const [prevmarks, setPrevmarks] = useState(0)
 
@@ -70,6 +106,7 @@ export default function Pdfgen({ data, marks, subject, title }) {
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subject}>Subject : {Subject}</Text>
           <Text style={styles.marks}>Total Marks: {marks}</Text>
+          <Text style={styles.time}>Time: {time&&timeinminhrs(time)}</Text>
         </View>
         <View style={styles.section}>
           {data &&

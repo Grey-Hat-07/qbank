@@ -19,6 +19,8 @@ export default function page() {
     const [lastname, setLastname] = useState('')
     const [expertise, setExpertise] = useState('')
     const [contributedQuestions, setContributedQuestions] = useState([])
+    const [generatedQuestions, setGeneratedQuestions] = useState([])
+    const [marks, setMarks] = useState()
     const getdetails = async () => {
         const email = cookie.email
         const res = await fetch(`http://localhost:8080/qms/details/${email}`, {
@@ -36,9 +38,12 @@ export default function page() {
             setExpertise(json.expert)
             setEmail(json.email)
             setContributedQuestions(json.contributedQuestions)
-            console.log(contributedQuestions)
+            setGeneratedQuestions(json.generatedPapers)
+            setMarks(json.marks)
+            // console.log(contributedQuestions)
+            
         }
-        console.log(contributedQuestions)
+        // console.log(contributedQuestions)
         // setUsername(json.username)
         // setFirstname(json.firstName)
         // setLastname(json.lastName)
@@ -53,6 +58,7 @@ export default function page() {
     //     { id: 2, title: 'What are the benefits of using Tailwind CSS?' },
     //     { id: 3, title: 'How to handle form submission in Node.js?' },
     // ];
+    console.log(generatedQuestions)
 
     return (
         <div className='flex  h-screen'>
@@ -65,40 +71,69 @@ export default function page() {
                     <p className="text-sm text-gray-600 mb-6 text-center">{username}</p>
                     <p className="text-md text-black mb-4 "><strong>Email : </strong>{email}</p>
 
-                    
-                    <p className="text-md text-black mb-4 "><strong>Expertise : </strong>{expertise?expertise:"Not specified"}</p>
+
+                    <p className="text-md text-black mb-4 "><strong>Expertise : </strong>{expertise ? expertise : "Not specified"}</p>
                     {/* Add more profile details as needed */}
                 </div>
             </div>
             <div className="bg-white w-3/4 p-4 container">
                 <h2 className="text-lg font-semibold mb-4">Contributed Questions</h2>
                 <ul className='container'>
-                    {contributedQuestions&&contributedQuestions.map((question,index) => (
+                    <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-2">
+                        <div className="text-gray-600">
+                            <p className="text-gray-500 text-2xl">Questions</p>
+                        </div>
+                        <div className="text-gray-600">
+                            <p className="text-gray-500 text-2xl">Subject</p>
+                        </div>
+                    </div>
+                    <hr className='my-2' />
+                    {contributedQuestions && contributedQuestions.map((question, index) => (
                         <li key={index} className=" py-2">
-                            <p className='text-md text-black mb-4 '>
-                                {question}
-                            </p>
-                            </li>
+
+                            <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-2">
+                                <div className="text-gray-500">
+                                    <p className=" font-semibold text-lg">{question}</p>
+                                </div>
+                                {/* <div className="text-gray-600">
+                            <p className="text-gray-500">React</p>
+                            </div> */}
+                                <div className="text-black-600">
+                                    <p className="text-gray-500 text-lg">Computer Science</p>
+                                </div>
+                            </div>
+                        </li>
                     ))}
                 </ul>
 
-                <h3>Generated question</h3>
-                <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
-                    <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
+                <h2 className="text-lg font-semibold mt-10 mb-4">Generated Question Papers</h2>
+                <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
                         <div className="text-gray-600">
-                            <p className="font-medium text-lg">Question</p>
-                            <p className="text-gray-500">How to create a React app?</p>
-                            </div>  
-                            <div className="text-gray-600">
-                            <p className="font-medium text-lg">Topic</p>
-                            <p className="text-gray-500">React</p>
-                            </div>
-                            <div className="text-gray-600">
-                            <p className="font-medium text-lg">Subject</p>
+                            <p className="text-gray-500 text-2xl">Topic</p>
+                        </div>
+                        <div className="text-gray-600">
+                            <p className="text-gray-500 text-2xl">Total marks</p>
+                        </div>
+                        <div className="text-gray-600">
+                            <p className="text-gray-500 text-2xl">Subject</p>
+                        </div>
+                    </div><hr/>
+                <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+                    {generatedQuestions && generatedQuestions.map((topic, index) => (
+                    <div key={index} className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
+                        <div className="text-gray-600">
+                            <p className="text-gray-500 flex">
+                                {topic}
+                            </p>
+                        </div>
+                        <div className="text-gray-600">
+                            <p className="text-gray-500">{marks[index]}</p>
+                        </div>
+                        <div className="text-gray-600 mb-4">
                             <p className="text-gray-500">Computer Science</p>
-                            </div>
                         </div>
-                        </div>
+                    </div>))}
+                </div>
             </div>
         </div>
     );

@@ -10,9 +10,9 @@ const subtopicscomputerscience = {
     3: { title: 'Algorithms' },
     4: { title: 'Operating Systems' },
     5: { title: 'Networking' },
-    6: { title: 'Database Management Systems' },
+    6: { title: 'Databases' },
     7: { title: 'Computer Architecture' },
-    8: { title: 'Theory of Computation' }
+    // 8: { title: 'Theory of Computation' }
 
 }
 const subtopicsmaths = {
@@ -82,7 +82,7 @@ export default function page() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ subject, topic: mappedTopics, full_marks: marks })
+            body: JSON.stringify({ subject, topic: mappedTopics, full_marks: marks, email: cookie.email })
         })
         const json = await res.json()
         if (json)
