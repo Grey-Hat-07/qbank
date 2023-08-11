@@ -130,7 +130,7 @@ export default function page() {
                                                     <option value="Data Structures">Data Structures</option>
                                                     <option value="Operating Systems">Operating Systems</option>
                                                     <option value="Networking">Networking</option>
-                                                    <option value="Database Management Systems">Database Management Systems</option>
+                                                    <option value="Databases">Database Management Systems</option>
                                                     <option value="Computer Architecture">Computer Architecture</option>
                                                     <option value="Theory of Computation">Theory of Computation</option>
                                                 </select>
