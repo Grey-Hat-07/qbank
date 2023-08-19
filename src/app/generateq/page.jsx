@@ -4,6 +4,7 @@ import { parseCookies } from 'nookies'
 import Pdfgen from './Pdfgen'
 import { PDFDownloadLink, PDFRenderer, PDFViewer } from '@react-pdf/renderer'
 import ReactPDF from '@react-pdf/renderer'
+import {v4 as uuidv4} from 'uuid'
 const subtopicscomputerscience = {
     1: { title: 'computer programming' },
     2: { title: 'Data Structures' },
@@ -30,8 +31,11 @@ export default function page() {
         if (!cookie.email) {
             window.location.href = '/Signin'
         }
+        // const uuid = uuidv4()
+        // console.log(uuid)
+        // setUuid(uuid)
     }, [])
-
+    const [uuid, setUuid] = useState('');
     const [subject, setSubject] = useState('');
     const [title, setTitle] = useState('')
     const [marks, setMarks] = useState()
@@ -69,6 +73,9 @@ export default function page() {
         }
     };
     const handlesubmit = async (e) => {
+        const uuid = uuidv4()
+        console.log(uuid)
+        setUuid(uuid)
         e.preventDefault()
         if (!title || !marks || !selectedSubtopics || !subject) {
             alert('Please fill all the fields')
@@ -82,13 +89,14 @@ export default function page() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ subject, topic: mappedTopics, full_marks: marks, email: cookie.email })
+            body: JSON.stringify({ subject, topic: mappedTopics, full_marks: marks, email: cookie.email, uuid })
         })
         const json = await res.json()
         if (json)
             console.log(json)
         setResult(json)
         setShowPdf(true)
+        setUuid('')
         
 
     }
