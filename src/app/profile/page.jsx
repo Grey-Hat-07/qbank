@@ -71,6 +71,7 @@ export default function page() {
         })
         const json = await res.json()
         // console.log(json)
+        return json
 
     }
 
@@ -158,7 +159,7 @@ export default function page() {
                                 <p className="text-gray-500">Computer Science</p>
                             </div>
                             <div className="text-gray-600 mb-4 justify-center flex">
-                            <PDFDownloadLink document={<Pdfgen data={getdown(uuid[index])} />} fileName={paperTitles[index]}>
+                            <PDFDownloadLink document={<Pdfgen title={paperTitles[index]} marks={marks[index]} data={getdown(uuid[index])} />} fileName={paperTitles[index]}>
                                         {({ blob, url, loading, error }) => (loading ? <h5 className='text-blue-400'>Loading...</h5>:
                                         <Download className="h-6 w-6 text-blue-400 hover:scale-125  transition-transform duration-500 ease-out" aria-hidden="true"
                                         />
