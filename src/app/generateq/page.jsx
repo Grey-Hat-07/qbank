@@ -73,14 +73,15 @@ export default function page() {
         }
     };
     const handlesubmit = async (e) => {
-        const uuid = uuidv4()
-        console.log(uuid)
-        setUuid(uuid)
+        
         e.preventDefault()
         if (!title || !marks || !selectedSubtopics || !subject) {
             alert('Please fill all the fields')
             return
         }
+        const uuid = uuidv4()
+        console.log(uuid)
+        setUuid(uuid)
         const mappedTopics = selectedSubtopics.map((key) => subtopicscomputerscience[key]?.title || '');
         console.log(title, marks, selectedSubtopics, subject, mappedTopics)
 
@@ -89,7 +90,7 @@ export default function page() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ subject, topic: mappedTopics, full_marks: marks, email: cookie.email, uuid })
+            body: JSON.stringify({ title,subject, topic: mappedTopics, full_marks: marks, email: cookie.email, uuid })
         })
         const json = await res.json()
         if (json)

@@ -4,6 +4,9 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { setCookie, parseCookies } from 'nookies'
+import { Download } from 'lucide-react';
+import {PDFDownloadLink, PDFViewer} from '@react-pdf/renderer'
+import Pdfgen from './Pdfgen'
 export default function page() {
     const cookie = parseCookies()
     useEffect(() => {
@@ -21,6 +24,9 @@ export default function page() {
     const [contributedQuestions, setContributedQuestions] = useState([])
     const [generatedQuestions, setGeneratedQuestions] = useState([])
     const [marks, setMarks] = useState()
+    const [paperTitles,setpapertitles] = useState()
+
+    const [uuid,setUuid] = useState()
     const getdetails = async () => {
         const email = cookie.email
         const res = await fetch(`http://localhost:8080/qms/details/${email}`, {
@@ -40,8 +46,9 @@ export default function page() {
             setContributedQuestions(json.contributedQuestions)
             setGeneratedQuestions(json.generatedPapers)
             setMarks(json.marks)
-            // console.log(contributedQuestions)
-            
+            setpapertitles(json.paperTitles)
+            setUuid(json.uuid)
+
         }
         // console.log(contributedQuestions)
         // setUsername(json.username)
@@ -49,16 +56,23 @@ export default function page() {
         // setLastname(json.lastName)
         // setExpertise(json.expertise)
     }
+    // console.log(paperTitles)
+    // console.log(uuid)
 
 
+    const getdown=async(uuid)=>{
+        // console.log(uuid)
+        const res = await fetch(`http://localhost:8080/qms/get/papers`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({uuid, email:cookie.email})
+        })
+        const json = await res.json()
+        // console.log(json)
 
-    // Replace this data with the list of questions contributed by the user
-    // const contributedQuestions = [
-    //     { id: 1, title: 'How to create a React app?' },
-    //     { id: 2, title: 'What are the benefits of using Tailwind CSS?' },
-    //     { id: 3, title: 'How to handle form submission in Node.js?' },
-    // ];
-    console.log(generatedQuestions)
+    }
 
     return (
         <div className='flex  h-screen'>
@@ -107,32 +121,54 @@ export default function page() {
                 </ul>
 
                 <h2 className="text-lg font-semibold mt-10 mb-4">Generated Question Papers</h2>
-                <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
-                        <div className="text-gray-600">
-                            <p className="text-gray-500 text-2xl">Topic</p>
-                        </div>
-                        <div className="text-gray-600">
-                            <p className="text-gray-500 text-2xl">Total marks</p>
-                        </div>
-                        <div className="text-gray-600">
-                            <p className="text-gray-500 text-2xl">Subject</p>
-                        </div>
-                    </div><hr/>
+                <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-5">
+                    <div className="text-gray-600">
+                        <p className="text-gray-500 text-2xl">Paper Title</p>
+                    </div>
+                    <div className="text-gray-600 justify-center flex">
+                        <p className="text-gray-500 text-2xl">Topic</p>
+                    </div>
+                    <div className="text-gray-600 justify-center flex">
+                        <p className="text-gray-500 text-2xl">Total marks</p>
+                    </div>
+                    <div className="text-gray-600 justify-center flex">
+                        <p className="text-gray-500 text-2xl">Subject</p>
+                    </div>
+                    <div className="text-gray-600 justify-center flex">
+                        <p className="text-gray-500 text-2xl">Download</p>
+                    </div>
+                </div><hr />
                 <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
                     {generatedQuestions && generatedQuestions.map((topic, index) => (
-                    <div key={index} className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
-                        <div className="text-gray-600">
-                            <p className="text-gray-500 flex">
-                                {topic}
-                            </p>
-                        </div>
-                        <div className="text-gray-600">
-                            <p className="text-gray-500">{marks[index]}</p>
-                        </div>
-                        <div className="text-gray-600 mb-4">
-                            <p className="text-gray-500">Computer Science</p>
-                        </div>
-                    </div>))}
+                        <div key={index} className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-5">
+                            <div className="text-gray-600">
+                                <p className="text-gray-500 flex">
+                                    {paperTitles[index]}
+                                </p>
+                            </div>
+                            <div className="text-gray-600">
+                                <p className="text-gray-500">
+                                    {topic}
+                                </p>
+                            </div>
+                            <div className="text-gray-600 justify-center flex">
+                                <p className="text-gray-500">{marks[index]}</p>
+                            </div>
+                            <div className="text-gray-600 mb-4 justify-center flex">
+                                <p className="text-gray-500">Computer Science</p>
+                            </div>
+                            <div className="text-gray-600 mb-4 justify-center flex">
+                            <PDFDownloadLink document={<Pdfgen data={getdown(uuid[index])} />} fileName={paperTitles[index]}>
+                                        {({ blob, url, loading, error }) => (loading ? <h5 className='text-blue-400'>Loading...</h5>:
+                                        <Download className="h-6 w-6 text-blue-400 hover:scale-125  transition-transform duration-500 ease-out" aria-hidden="true"
+                                        />
+                                        
+                                        )}
+                                    </PDFDownloadLink>
+                                
+                            
+                            </div>
+                        </div>))}
                 </div>
             </div>
         </div>
