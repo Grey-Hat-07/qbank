@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { setCookie, parseCookies } from 'nookies'
-import { Download } from 'lucide-react';
+import { Download,XCircle, XOctagon } from 'lucide-react';
 import {PDFDownloadLink, PDFViewer} from '@react-pdf/renderer'
 import Pdfgen from './Pdfgen'
 export default function page() {
@@ -36,7 +36,7 @@ export default function page() {
             // },
         })
         const json = await res.json()
-        console.log(json)
+        // console.log(json)
         if (json) {
             setUsername(json.username)
             setFirstname(json.firstName)
@@ -59,8 +59,10 @@ export default function page() {
     // console.log(paperTitles)
     // console.log(uuid)
 
-
-    const getdown=async(uuid)=>{
+    const[quesData,setQuesData] = useState()
+    const [hoverdown,sethoverdown] = useState(false)
+    const [titleIndex,setTitleIndex] = useState()
+    const getdown=async(uuid,index)=>{
         // console.log(uuid)
         const res = await fetch(`http://localhost:8080/qms/get/papers`, {
             method: 'POST',
@@ -71,9 +73,52 @@ export default function page() {
         })
         const json = await res.json()
         // console.log(json)
-        return json
+        setQuesData(json)
+        sethoverdown(true)
+        setTitleIndex(index)
+        // co
+        // return json
 
     }
+    const Modal = ({ quesData }) => {
+        // console.log(quesData)
+        return (
+          // The modal backdrop
+          <div
+            className={`fixed top-0 left-0 w-full h-full flex items-center justify-center  'block' : 'hidden'
+             bg-gray-800 bg-opacity-50`}
+          >
+            {/* The modal content */}
+            <div className="bg-white w-96 p-4 rounded shadow-lg">
+              {/* Modal header */}
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold"></h2>
+                <button
+                  className="text-red-600 hover:text-red-800"
+                    onClick={()=>{sethoverdown(false)}}
+                >
+                  <XOctagon className="h-6 w-6" aria-hidden="true" />
+                </button>
+              </div>
+              {/* Modal content */}
+              {/* {children} */}
+              <h4 className="text-lg font-semibold mb-4">Question Paper</h4>
+              <h5 className="text-md font-semibold mb-4">Title : </h5>
+                <h5 className="text-md font-semibold mb-4 flex p-2">
+                    Click {' '}
+                    <PDFDownloadLink document={<Pdfgen title={paperTitles[titleIndex]} marks={marks[titleIndex]} data={quesData} />} fileName={paperTitles[titleIndex]}>
+                                        {({ blob, url, loading, error }) => (loading ? <h5 className='text-blue-400'>Loading...</h5>:
+                                       <h5 className='text-blue-400'>{' '} here </h5>
+                                        
+                                        )}
+                                    </PDFDownloadLink>
+                    {' '}to download
+                </h5>
+            </div>
+          </div>
+        );
+      };
+    
 
     return (
         <div className='flex  h-screen'>
@@ -120,6 +165,7 @@ export default function page() {
                         </li>
                     ))}
                 </ul>
+                {hoverdown && <Modal quesData={quesData} />}
 
                 <h2 className="text-lg font-semibold mt-10 mb-4">Generated Question Papers</h2>
                 <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-5">
@@ -159,13 +205,16 @@ export default function page() {
                                 <p className="text-gray-500">Computer Science</p>
                             </div>
                             <div className="text-gray-600 mb-4 justify-center flex">
-                            <PDFDownloadLink document={<Pdfgen title={paperTitles[index]} marks={marks[index]} data={getdown(uuid[index])} />} fileName={paperTitles[index]}>
+                            {/* <PDFDownloadLink document={<Pdfgen title={paperTitles[index]} marks={marks[index]} data={getdown(uuid[index])} />} fileName={paperTitles[index]}>
                                         {({ blob, url, loading, error }) => (loading ? <h5 className='text-blue-400'>Loading...</h5>:
                                         <Download className="h-6 w-6 text-blue-400 hover:scale-125  transition-transform duration-500 ease-out" aria-hidden="true"
                                         />
                                         
                                         )}
-                                    </PDFDownloadLink>
+                                    </PDFDownloadLink> */}
+                                    <Download className="h-6 w-6 text-blue-400 hover:scale-125  transition-transform duration-500 ease-out" 
+                                    aria-hidden="true" onClick={()=>{getdown(uuid[index],index)}}
+                                    />
                                 
                             
                             </div>
@@ -174,4 +223,7 @@ export default function page() {
             </div>
         </div>
     );
+
+
+    
 }

@@ -32,14 +32,14 @@ const styles = StyleSheet.create({
   },
   question: {
     fontSize: '12pt',
-    marginBottom: '10pt',
-    marginTop: '10pt',
+    marginBottom: '5pt',
+    marginTop: '5pt',
   },
   questionMarks: {
     fontSize: '12pt',
     textAlign: 'right',
-    marginBottom: '10pt',
-    marginTop: '10pt',
+    marginBottom: '5pt',
+    marginTop: '5pt',
     marginLeft: 'auto',
   },
   flex: {
@@ -49,10 +49,10 @@ const styles = StyleSheet.create({
   },
   questionType: {
     fontSize: '13pt',
-    marginBottom: '10pt',
-    marginTop: '10pt',
+    marginBottom: '5pt',
+    marginTop: '5pt',
   },
-  time: {
+  time:{
     fontSize: '13pt',
     marginBottom: '10pt',
     marginTop: '10pt',
@@ -62,11 +62,7 @@ const styles = StyleSheet.create({
 export default function Pdfgen({ title, data, marks }) {
   // console.log(data, title)
   const [questions, setQuestions] = useState([])
-  useEffect(()=>{
-    console.log(data)
-    setQuestions(data)
-    console.log(questions)
-  },[questions])
+  console.log(data)
   return (
     <Document>
       <Page style={styles.page}>
@@ -76,8 +72,8 @@ export default function Pdfgen({ title, data, marks }) {
           <Text style={styles.marks}>Total Marks: {marks}</Text>
           {/* <Text style={styles.time}>Time: {time && timeinminhrs(time)}</Text> */}
         </View>
-        {/* ***********ei section ta map korte hobe*********** */}
-        {/* <View style={styles.section}>
+        
+        <View style={styles.section}>
           {data&&data.map((question, index) => (
             <View key={index} style={styles.section}>
               <View style={styles.flex}>
@@ -88,7 +84,7 @@ export default function Pdfgen({ title, data, marks }) {
             </View>
           ))
           }
-        </View> */}
+        </View>
         
       </Page>
     </Document>
